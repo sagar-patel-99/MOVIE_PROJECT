@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Movies</title>
+  <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="brand-logo">Movie App</a>
+      <ul class="nav-links">
+        <li><a href="/" class="btn btn-primary">Home</a></li>
+        <% if (page > 1) { %>
+          <li><a href="/search?query=<%= query %>&page=<%= page - 1 %>" class="btn btn-primary">Previous</a></li>
+        <% } %>
+        <% if (parseInt(page) < totalPages && nextPageResultsAvailable) { %>
+          <li><a href="/search?query=<%= query %>&page=<%= parseInt(page) + 1 %>" class="btn btn-primary">Next</a></li>
+        <% } %>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1 style="margin-top: 20px;">Search Movies</h1>
+    <form action="/search" method="GET" class="mb-4">
+      <div class="input-group search-container">
+        <input type="text" name="query" class="form-control search-input" placeholder="Search for movies...">
+        <div class="input-group-append">
+          <button type="submit" class="btn btn-primary search-button">Search</button>
+        </div>
+      </div>
+    </form>
+
+    <% if (searchResults.length > 0) { %>
+      <h2>Search Results for "<%= query %>"</h2>
+      <ul class="list-group" style="list-style-type: none;">
+        <% searchResults.forEach((movie, index) => { %>
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-md-2">
+                <div style="position: absolute; margin-left: -30px;"><%= index + 1 %>.</div>
+                <% if (movie.poster_path) { %>
+                  <img src="https://image.tmdb.org/t/p/w200<%= movie.poster_path %>" class="img-fluid" alt="<%= movie.title %>">
+                <% } else { %>
+                  <p>No poster available</p>
+                <% } %>
+              </div>
+              <div class="col-md-10">
+                <h5><%= movie.title %></h5>
+                <p><strong>Release Date:</strong> <%= formatDate(movie.release_date) %></p>
+                <p><strong>Rating:</strong> <%= movie.vote_average %> / 10</p>
+              </div>
+            </div>
+          </li>
+        <% }); %>
+      </ul>
+    <% } else if (query) { %>
+      <p>No results found for "<%= query %>".</p>
+    <% } %>
+  </div>
+        
+  <script>
+    function formatDate(dateString) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    }
+  </script>
+</body>
+</html>

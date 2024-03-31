@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Top Rated Movies</title>
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="brand-logo">Movie App</a>
+      <ul class="nav-links">
+        <li><a href="/" class="btn btn-primary">Home</a></li>
+        <% if (page > 1) { %>
+          <li><a href="/top-rated?page=<%= Number(page) - 1 %>" class="btn btn-primary">Previous</a></li>
+        <% } %>
+        <% if (page < totalPages) { %>
+          <li><a href="/top-rated?page=<%= Number(page) + 1 %>" class="btn btn-primary">Next</a></li>
+        <% } %>
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <h1>Top Rated Movies</h1>
+    <ul class="list-group" style="list-style-type: none;">
+      <% if (topRatedMovies.length > 0) { %>
+        <% topRatedMovies.forEach((movie, index) => { %>
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-md-2">
+                <div style="position: absolute; margin-left: -30px;"><%= index + 1 %>.</div>
+                <% if (movie.poster_path) { %>
+                  <img src="https://image.tmdb.org/t/p/w200<%= movie.poster_path %>" class="img-fluid" alt="<%= movie.title %>">
+                <% } else { %>
+                  <p>No poster available</p>
+                <% } %>
+              </div>
+              <div class="col-md-10">
+                <h5><%= movie.title %></h5>
+                <p><strong>Release Date:</strong> <%= formatDate(movie.release_date) %></p>
+                <p><strong>Rating:</strong> <%= movie.vote_average %> / 10</p>
+              </div>
+            </div>
+          </li>
+        <% }); %>
+      <% } else { %>
+        <p>No top-rated movies available.</p>
+      <% } %>
+    </ul>
+  </div>
+  <% var jsPage = page; var jsTotalPages = totalPages; %>
+  <script>
+    var page =  jsPage ;
+    var totalPages =  jsTotalPages ;
+  </script>
+</body>
+</html>
